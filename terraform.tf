@@ -80,7 +80,7 @@ variable "image" { default = "debian-10" }
 
 // Netbox
 module "nbx" {
-  source = "../../modules/cloud-netbox"
+  source = "github.com/di-starss/vspace307-cloud-netbox"
 
   env = var.env
   project = var.project
@@ -97,7 +97,7 @@ module "nbx" {
 
 // DNS
 module "dns" {
-  source = "../../modules/cloud-dns-record"
+  source = "github.com/di-starss/vspace307-cloud-dns-record"
 
   zone = module.nbx.dns_zone
   record = module.nbx.dns_record
