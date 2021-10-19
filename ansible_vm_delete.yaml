@@ -1,0 +1,50 @@
+#
+# OpenStack / vm_delete
+#
+---
+- name: "--- Ansible & OpenStack & Netbox & DNS"
+  connection: local
+  hosts: localhost
+  gather_facts: False
+
+  vars:
+    netbox_url: http://172.21.17.33:8000
+    netbox_token: 0123456789abcdef0123456789abcdef01234567
+    pdns_host: 172.21.17.19
+    pdns_port: 8448
+    pdns_api_key: peegahh7ohphahyeer4loxai2uZ8reire6sheef6Thooquo8ux
+    pdns_prot: http
+
+  tasks:
+    - name: "openstack: delete vm"
+      os_server:
+        state: absent
+        name: ansible-nginx
+
+    - name: "openstack: delete keypair/ansible"
+      os_keypair:
+        state: absent
+        name: ansible
+
+    - name: "openstack: delete security_group/ansible-sg0"
+      os_security_group:
+        state: absent
+        name: ansible-sg0
+
+    - name: "netbox: delete vm"
+      netbox.netbox.netbox_virtual_machine:
+        netbox_url: "{{ netbox_url }}"
+        netbox_token: "{{ netbox_token }}"
+        data:
+          name: ansible-example-nginx
+        state: absent
+
+    - name: "dns: delete record"
+      powerdns_record:
+        name: nginx.ansible.example.ldn1.cloud.vspace307.io
+        zone: cloud.vspace307.io
+        pdns_host: "{{ pdns_host }}"
+        pdns_port: "{{ pdns_port }}"
+        pdns_api_key: "{{ pdns_api_key }}"
+        pdns_prot: "{{ pdns_prot }}"
+        state: absent
