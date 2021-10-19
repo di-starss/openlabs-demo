@@ -1,0 +1,148 @@
+#
+# export ANSIBLE_HOST_KEY_CHECKING=False
+# ---
+# sudo apt install ansible python3-pip
+# pip3 install pynetbox
+# ansible-galaxy collection install netbox.netbox
+# mkdir -p ~/.ansible/plugins/modules
+# cd ~/.ansible/plugins/modules
+# wget https://raw.githubusercontent.com/Nosmoht/ansible-module-powerdns/master/powerdns_record.py
+# ---
+# https://github.com/netbox-community/ansible_modules/issues/198
+#
+
+
+#
+# OpenStack / vm_create
+#
+---
+- name: "+++ Ansible & OpenStack & Netbox & DNS"
+  connection: local
+  hosts: localhost
+  gather_facts: False
+
+  vars:
+    netbox_url: http://172.21.17.33:8000
+    netbox_token: 0123456789abcdef0123456789abcdef01234567
+    pdns_host: 172.21.17.19
+    pdns_port: 8448
+    pdns_api_key: peegahh7ohphahyeer4loxai2uZ8reire6sheef6Thooquo8ux
+    pdns_prot: http
+
+  tasks:
+    - name: "openstack: create keypair/ansible"
+      os_keypair:
+        state: present
+        name: ansible
+        public_key_file: /home/mgmt/.ssh/id_rsa.pub
+
+    - name: "openstack: create security_group/ansible-sg0"
+      os_security_group:
+        state: present
+        name: ansible-sg0
+
+    - name: "openstack: create security_group/ansible-sg0/ssh"
+      os_security_group_rule:
+        security_group: ansible-sg0
+        protocol: tcp
+        port_range_min: 22
+        port_range_max: 22
+        remote_ip_prefix: 0.0.0.0/0
+
+    - name: "openstack: create security_group/ansible-sg0/http"
+      os_security_group_rule:
+        security_group: ansible-sg0
+        protocol: tcp
+        port_range_min: 80
+        port_range_max: 80
+        remote_ip_prefix: 0.0.0.0/0
+
+    - name: "openstack: create security_group/ansible-sg0/icmp"
+      os_security_group_rule:
+        security_group: ansible-sg0
+        protocol: icmp
+        remote_ip_prefix: 0.0.0.0/0
+
+    - name: "openstack: create vm"
+      os_server:
+        state: present
+        availability_zone: LDN1
+        name: ansible-nginx
+        image: debian-10
+        key_name: ansible
+        flavor: m1.small
+        network: ldn-openlabs-www
+        auto_ip: false
+        security_groups: [ "default", "ansible-sg0" ]
+        meta:
+          hostname: nginx.ansible.localdomain
+      register: vm_ansible_nginx
+
+    - name: "openstack/debug: ip"
+      debug: var=vm_ansible_nginx.openstack.private_v4
+
+    - name: "openstack: inventory"
+      add_host: name=vm_ansible_nginx groups=openstack
+        ansible_ssh_host={{ vm_ansible_nginx.openstack.private_v4 }}
+
+    - name: "wait: ssh"
+      pause:
+        seconds: 30
+
+    - name: "netbox: create vm"
+      netbox.netbox.netbox_virtual_machine:
+        netbox_url: "{{ netbox_url }}"
+        netbox_token: "{{ netbox_token }}"
+        data:
+          name: ansible-example-nginx
+          cluster: demo-lab
+        state: present
+
+    - name: "netbox: create vm/if"
+      netbox.netbox.netbox_vm_interface:
+        netbox_url: "{{ netbox_url }}"
+        netbox_token: "{{ netbox_token }}"
+        data:
+          virtual_machine: ansible-example-nginx
+          name: eth0
+        state: present
+
+    - name: "netbox: create vm/if/ip"
+      netbox.netbox.netbox_ip_address:
+        netbox_url: "{{ netbox_url }}"
+        netbox_token: "{{ netbox_token }}"
+        data:
+          address: "{{ vm_ansible_nginx.openstack.private_v4 }}"
+          status: Active
+          assigned_object:
+            virtual_machine: ansible-example-nginx
+            name: eth0
+        state: present
+
+    - name: "dns: create record"
+      powerdns_record:
+        name: nginx.ansible.example.ldn1.cloud.vspace307.io.
+        zone: cloud.vspace307.io
+        type: A
+        content: "{{ vm_ansible_nginx.openstack.private_v4 }}"
+        ttl: 5
+        pdns_host: "{{ pdns_host }}"
+        pdns_port: "{{ pdns_port }}"
+        pdns_api_key: "{{ pdns_api_key }}"
+        pdns_prot: "{{ pdns_prot }}"
+        state: present
+
+#
+# DEPLOY
+#
+- name: "Ansible & Deploy"
+  hosts: openstack
+  remote_user: debian
+  gather_facts: False
+  become: yes
+
+  tasks:
+    - name: install nginx
+      apt:
+        name: nginx
+        state: present
