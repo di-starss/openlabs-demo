@@ -11,9 +11,3 @@ groups:
   vdb_delay: "'vdb_ops_core2_delay' in (openstack.tags|list)"
   vdb_ams: "'vdb_ops_core2_AMS1' in (openstack.tags|list)"
   vdb_ldn: "'vdb_ops_core2_LDN1' in (openstack.tags|list)"
-
-cache: yes
-cache_plugin: ansible.builtin.jsonfile
-cache_timeout: 30
-cache_connection: dynamic_inventory
-cache_prefix: os_
