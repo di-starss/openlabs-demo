@@ -5,12 +5,12 @@ keyed_groups:
     prefix: tags
 
 groups:
-  vdb: "'vdb_victoria_core1' in (openstack.tags|list)"
-  vdb_master: "'vdb_victoria_core1_master' in (openstack.tags|list)"
-  vdb_slave: "'vdb_victoria_core1_slave' in (openstack.tags|list)"
-  vdb_delay: "'vdb_victoria_core1_delay' in (openstack.tags|list)"
-  vdb_ams: "'vdb_victoria_core1_AMS1' in (openstack.tags|list)"
-  vdb_ldn: "'vdb_victoria_core1_LDN1' in (openstack.tags|list)"
+  vdb: "'vdb_ops_core1' in (openstack.tags|list)"
+  vdb_master: "'vdb_ops_core1_master' in (openstack.tags|list)"
+  vdb_slave: "'vdb_ops_core1_slave' in (openstack.tags|list)"
+  vdb_delay: "'vdb_ops_core1_delay' in (openstack.tags|list)"
+  vdb_ams: "'vdb_ops_core1_AMS1' in (openstack.tags|list)"
+  vdb_ldn: "'vdb_ops_core1_LDN1' in (openstack.tags|list)"
 
 cache: yes
 cache_plugin: ansible.builtin.jsonfile
