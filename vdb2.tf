@@ -26,7 +26,7 @@ variable "consul_dc" { default = "rg1" }
 
 // VDB
 // ---------------------------------------------------------------------------------------------------------------------
-variable "env" { default = "victoria" }
+variable "env" { default = "ops" }
 variable "project" { default = "vdb" }
 
 variable "service_core0" { default = "core1" }
@@ -44,12 +44,12 @@ variable "flavor_vdb_delay" { default = "vdb-delay" }
 variable "flavor_vdb_sysbench" { default = "vdb-sysbench" }
 
 // network
-variable "router_ams" { default = "ams-victoria-vdb" }
-variable "router_ldn" { default = "ldn-victoria-vdb" }
+variable "router_ams" { default = "ams-ops-vdb" }
+variable "router_ldn" { default = "ldn-ops-vdb" }
 
-variable "net_ams_vdb_master" { default = "ams-victoria-vdb-master" }
-variable "net_ams_vdb_slave" { default = "ams-victoria-vdb-slave" }
-variable "net_ldn_vdb_delay" { default = "ldn-victoria-vdb-delay" }
+variable "net_ams_vdb_master" { default = "ams-ops-vdb-master" }
+variable "net_ams_vdb_slave" { default = "ams-ops-vdb-slave" }
+variable "net_ldn_vdb_delay" { default = "ldn-ops-vdb-delay" }
 
 variable "subnet_ams_vdb_master" { default = "172.19.16.0/24" }
 variable "subnet_ams_vdb_slave" { default = "172.19.17.0/24" }
