@@ -1,0 +1,12 @@
+clouds:
+  demo_lab:
+    auth:
+      auth_url: http://api.endpoint.ops.openlabs.rg1.cloud.vspace307.io:5000
+      project_name: ansible
+      username: vdb
+      project_domain_name: Default
+      user_domain_name: Default
+      password: zalupa123123
+    region_name: RegionOne
+    interface: public
+    identity_api_version: 3
