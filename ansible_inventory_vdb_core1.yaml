@@ -1,4 +1,5 @@
 plugin: openstack.cloud.openstack
+private: true
 
 keyed_groups:
   - key: openstack.tags
