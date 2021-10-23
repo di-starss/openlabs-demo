@@ -1,0 +1,23 @@
+#
+# Ansible Dynamic Inventory & OpenStack
+#
+- name: "Ansible Dynamic Inventory & OpenStack"
+  hosts: vdb
+  remote_user: debian
+  gather_facts: False
+  become: yes
+
+  tasks:
+    - name: "ping"
+      ping:
+
+    - name: "pkg: update & upgrade"
+      apt:
+        upgrade: dist
+        update_cache: yes
+
+    - name: "install: pkg"
+      apt:
+        pkg:
+          - iftop
+          - zsh
