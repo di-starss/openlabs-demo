@@ -62,13 +62,13 @@ variable "volume_type_delay" { default = "ldn-ssd-rack-17" }
 variable "volume_type_sysbench" { default = "ams-ssd-rack-5" }
 
 variable "disk_boot_size" { default = 10 }
-variable "disk_data_size_master" { default = 50 }
-variable "disk_data_size_slave" { default = 50 }
-variable "disk_data_size_delay" { default = 50 }
+variable "disk_data_size_master" { default = 15 }
+variable "disk_data_size_slave" { default = 15 }
+variable "disk_data_size_delay" { default = 15 }
 
 // vdb
 variable "vdb_root_password" { default = "password123123" }
-variable "vdb_mgmt_user" { default = "di" }
+variable "vdb_mgmt_user" { default = "mgmt" }
 variable "vdb_mgmt_password" { default = "password123123" }
 
 variable "vdb_innodb_flush_log_at_trx_commit" { default = 0 }
