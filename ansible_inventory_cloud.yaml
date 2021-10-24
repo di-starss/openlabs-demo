@@ -6,7 +6,7 @@ clouds:
       username: vdb
       project_domain_name: Default
       user_domain_name: Default
-      password: zalupa123123
+      password: password123123
     region_name: RegionOne
     interface: public
     identity_api_version: 3
