@@ -67,9 +67,9 @@ variable "disk_data_size_slave" { default = 50 }
 variable "disk_data_size_delay" { default = 50 }
 
 // vdb
-variable "vdb_root_password" { default = "zalupa123123" }
+variable "vdb_root_password" { default = "password123123" }
 variable "vdb_mgmt_user" { default = "di" }
-variable "vdb_mgmt_password" { default = "zalupa123123" }
+variable "vdb_mgmt_password" { default = "password123123" }
 
 variable "vdb_innodb_flush_log_at_trx_commit" { default = 0 }
 variable "vdb_innodb_file_per_table" { default = 1 }
